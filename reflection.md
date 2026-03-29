@@ -1,5 +1,5 @@
 # PawPal+ Project Reflection
-
+## Student Yuzhen Chen
 ## 1. System Design
 
 **a. Initial design**
