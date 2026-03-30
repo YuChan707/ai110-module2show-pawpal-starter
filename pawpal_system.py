@@ -2,6 +2,11 @@ from typing import List, Optional
 
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
 
+PREFERENCE_RULES = {
+    "no late feeding": lambda t: t.category == "feeding",
+    "morning walks":   lambda t: t.category == "walking",
+}
+
 
 class Task:
     def __init__(
@@ -12,14 +17,16 @@ class Task:
         priority: str,
         category: str,
         frequency: str = "daily",
+        start_time: str = "08:00",
     ):
-        """Initialize a Task with its name, description, duration, priority, category, and frequency."""
+        """Initialize a Task with its name, description, duration, priority, category, frequency, and start time."""
         self.name = name
         self.description = description
         self.duration = duration        # in minutes
         self.priority = priority        # "high", "medium", "low"
         self.category = category        # "feeding", "grooming", "walking", etc.
         self.frequency = frequency      # "daily", "twice daily", "weekly", etc.
+        self.start_time = start_time    # "HH:MM" format
         self.completed = False
 
     def update_priority(self, new_priority: str) -> None:
@@ -71,6 +78,17 @@ class Owner:
         for pet in self.pets:
             all_tasks.extend(pet.tasks)
         return all_tasks
+
+    def filter_tasks(self, completed: bool = None, pet_name: str = None) -> List[Task]:
+        """Return tasks filtered by completion status and/or pet name."""
+        results = []
+        for pet in self.pets:
+            if pet_name and pet.name != pet_name:
+                continue
+            for task in pet.tasks:
+                if completed is None or task.completed == completed:
+                    results.append(task)
+        return results
 
     def __repr__(self) -> str:
         return f"Owner({self.name!r}, {len(self.pets)} pets, {self.available_time}min available)"
@@ -124,8 +142,18 @@ class Planner:
         """Sort tasks by priority (high → medium → low), then by duration (shortest first)."""
         return sorted(tasks, key=lambda t: (PRIORITY_ORDER[t.priority], t.duration))
 
-    def apply_constraints(self, tasks: List[Task], available_time: int) -> List[Task]:
-        """Keep only tasks that fit within the owner's available time."""
+    def sort_by_time(self, tasks: List[Task]) -> List[Task]:
+        """Sort tasks by their start_time in HH:MM format, earliest first."""
+        return sorted(tasks, key=lambda t: t.start_time)
+
+    def apply_constraints(self, tasks: List[Task], available_time: int, preferences: List[str] = None) -> List[Task]:
+        """Filter tasks by owner preferences, then keep only tasks that fit within available time."""
+        if preferences:
+            for pref in preferences:
+                rule = PREFERENCE_RULES.get(pref)
+                if rule:
+                    tasks = [t for t in tasks if not rule(t)]
+
         selected = []
         time_used = 0
         for task in tasks:
@@ -138,5 +166,5 @@ class Planner:
         """Collect all tasks from the owner's pets, sort and filter them, return a Schedule."""
         all_tasks = owner.get_all_tasks()
         sorted_tasks = self.sort_tasks(all_tasks)
-        feasible_tasks = self.apply_constraints(sorted_tasks, owner.available_time)
+        feasible_tasks = self.apply_constraints(sorted_tasks, owner.available_time, owner.preferences)
         return Schedule(feasible_tasks)
