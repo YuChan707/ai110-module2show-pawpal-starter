@@ -17,7 +17,27 @@ The Pet class represents the pet and is linked to the owner. It keeps basic info
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
-Yes, in the task, I decide to associate a assigment with the owner name because as each pet are different (and usually match with the owner personality). They could be associate with their special task.
+BY my side planning. Yes, in the task, I decide to associate a assigment with the owner name because as each pet are different (and usually match with the owner personality). They could be associate with their special task.
+
+__________________________________________________
+AI responses: 
+Structure & Design — Good
+
+All 5 classes from your UML are present with correct attributes and method signatures.
+Type hints are consistent throughout.
+raise NotImplementedError is the right pattern for stubs — it signals intent and fails loudly.
+Planner.__init__ defaulting constraints to {} is a good defensive default.
+
+Design gap — missing link
+
+Planner.generate_schedule takes a flat tasks list, but tasks live on Pet objects. Nothing collects them. You'll need either:
+
+a helper that gathers tasks from owner.pets, or
+pass owner directly into generate_schedule instead of tasks.
+Minor
+
+Task.update_priority (line 11) is marked optional in your spec. If you don't plan to implement it, you can drop it to keep the class simpler.
+The class order in the file (Task → Pet → Owner → Schedule → Planner) is good — dependencies are defined before they're used.
 
 ---
 
