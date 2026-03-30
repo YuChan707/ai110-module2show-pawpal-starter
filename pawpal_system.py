@@ -13,6 +13,7 @@ class Task:
         category: str,
         frequency: str = "daily",
     ):
+        """Initialize a Task with its name, description, duration, priority, category, and frequency."""
         self.name = name
         self.description = description
         self.duration = duration        # in minutes
@@ -22,11 +23,13 @@ class Task:
         self.completed = False
 
     def update_priority(self, new_priority: str) -> None:
+        """Validate and update the task's priority level."""
         if new_priority not in PRIORITY_ORDER:
             raise ValueError(f"priority must be one of {list(PRIORITY_ORDER)}")
         self.priority = new_priority
 
     def mark_complete(self) -> None:
+        """Mark the task as completed."""
         self.completed = True
 
     def __repr__(self) -> str:
@@ -36,12 +39,14 @@ class Task:
 
 class Pet:
     def __init__(self, name: str, pet_type: str, age: int):
+        """Initialize a Pet with its name, type, and age."""
         self.name = name
         self.pet_type = pet_type        # "dog", "cat", etc.
         self.age = age
         self.tasks: List[Task] = []
 
     def add_task(self, task: Task) -> None:
+        """Append a task to this pet's task list."""
         self.tasks.append(task)
 
     def __repr__(self) -> str:
@@ -50,12 +55,14 @@ class Pet:
 
 class Owner:
     def __init__(self, name: str, available_time: int, preferences: List[str] = None):
+        """Initialize an Owner with their name, daily time budget, and care preferences."""
         self.name = name
         self.available_time = available_time    # in minutes
         self.preferences = preferences or []
         self.pets: List[Pet] = []
 
     def add_pet(self, pet: Pet) -> None:
+        """Register a pet under this owner."""
         self.pets.append(pet)
 
     def get_all_tasks(self) -> List[Task]:
@@ -71,6 +78,7 @@ class Owner:
 
 class Schedule:
     def __init__(self, tasks: List[Task]):
+        """Initialize a Schedule from a list of tasks and compute total time."""
         self.tasks = tasks
         self.total_time = sum(t.duration for t in tasks)  # computed, never out of sync
 
@@ -109,6 +117,7 @@ class Schedule:
 
 class Planner:
     def __init__(self, constraints: Optional[dict] = None):
+        """Initialize the Planner with an optional dictionary of scheduling constraints."""
         self.constraints = constraints or {}
 
     def sort_tasks(self, tasks: List[Task]) -> List[Task]:
