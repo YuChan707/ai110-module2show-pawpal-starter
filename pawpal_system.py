@@ -59,6 +59,7 @@ class Task:
         )
 
     def __repr__(self) -> str:
+        """Return a concise string representation showing name, duration, priority, and status."""
         status = "done" if self.completed else "pending"
         return f"Task({self.name!r}, {self.duration}min, priority={self.priority}, {status})"
 
@@ -82,6 +83,7 @@ class Pet:
             self.tasks.append(next_task)
 
     def __repr__(self) -> str:
+        """Return a concise string representation showing name, type, and task count."""
         return f"Pet({self.name!r}, {self.pet_type}, {len(self.tasks)} tasks)"
 
 
@@ -116,6 +118,7 @@ class Owner:
         return results
 
     def __repr__(self) -> str:
+        """Return a concise string representation showing name, pet count, and time budget."""
         return f"Owner({self.name!r}, {len(self.pets)} pets, {self.available_time}min available)"
 
 
@@ -155,6 +158,7 @@ class Schedule:
         print(f"{'='*40}\n")
 
     def __repr__(self) -> str:
+        """Return a concise string representation showing task count and total duration."""
         return f"Schedule({len(self.tasks)} tasks, {self.total_time} min)"
 
 
@@ -187,8 +191,30 @@ class Planner:
                 time_used += task.duration
         return selected
 
+    def detect_conflicts(self, tasks: List[Task]) -> List[str]:
+        """Return a list of warning strings for any tasks whose time windows overlap."""
+        def to_minutes(hhmm: str) -> int:
+            """Convert a 'HH:MM' string to total minutes since midnight."""
+            h, m = hhmm.split(":")
+            return int(h) * 60 + int(m)
+
+        warnings = []
+        for i in range(len(tasks)):
+            for j in range(i + 1, len(tasks)):
+                a, b = tasks[i], tasks[j]
+                a_start = to_minutes(a.start_time)
+                b_start = to_minutes(b.start_time)
+                a_end = a_start + a.duration
+                b_end = b_start + b.duration
+                if a_start < b_end and b_start < a_end:
+                    warnings.append(
+                        f"WARNING: '{a.name}' ({a.start_time}, {a.duration}min) "
+                        f"overlaps with '{b.name}' ({b.start_time}, {b.duration}min)"
+                    )
+        return warnings
+
     def generate_schedule(self, owner: Owner) -> Schedule:
-        """Collect all tasks from the owner's pets, sort and filter them, return a Schedule."""
+        """Collect all tasks from the owner's pets, sort, filter, and check for conflicts."""
         all_tasks = owner.get_all_tasks()
         sorted_tasks = self.sort_tasks(all_tasks)
         feasible_tasks = self.apply_constraints(sorted_tasks, owner.available_time, owner.preferences)

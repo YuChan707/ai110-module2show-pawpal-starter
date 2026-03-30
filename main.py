@@ -82,3 +82,19 @@ print("\nMochi's tasks only:")
 for t in owner.filter_tasks(pet_name="Mochi"):
     status = "done" if t.completed else "pending"
     print(f"  - {t.name} ({status})")
+
+# ── 9. Conflict detection demo ────────────────────────────────────────────────
+# Add two tasks that intentionally overlap: Bath starts at 10:00 (20 min),
+# Nail trim starts at 10:10 — they share 10 minutes of overlap.
+dog.add_task(Task("Bath",      "Full bath with shampoo", 20, "medium", "grooming", start_time="10:00"))
+dog.add_task(Task("Nail trim", "Clip all four paws",     15, "medium", "grooming", start_time="10:10"))
+
+print("\nConflict Detection")
+print("=" * 40)
+conflicts = planner.detect_conflicts(owner.get_all_tasks())
+if conflicts:
+    for warning in conflicts:
+        print(f"  {warning}")
+else:
+    print("  No conflicts found.")
+print("=" * 40)
