@@ -62,10 +62,16 @@
 
 - What part of this project are you most satisfied with?
 
+
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
 
+
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+
+System Design:
+In the png and txt file named UML.
+But main requirement are: name of the owner, pet information, task information, schedule and function that make the plan
