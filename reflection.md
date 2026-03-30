@@ -84,12 +84,19 @@ I qualify 85 of 100 because it's problme the structure idea but it's lose the co
 **a. What you tested**
 
 - What behaviors did you test?
+Task completion changes status — after calling mark_complete(), the task's completed field switches from False to True
+Adding a task increases the pet's task count — after calling add_task(), len(pet.tasks) goes up by exactly 1 each time
+
 - Why were these tests important?
+The two automated tests targeted the most foundational behaviors — if mark_complete() doesn't actually flip the status, the auto-reschedule logic silently breaks because mark_complete() depends on setting self.completed = True first. If add_task() doesn't grow the list, the entire scheduler has nothing to work with.
 
 **b. Confidence**
 
 - How confident are you that your scheduler works correctly?
+80% secure because it's count all taks and utilize logic (time/priority/extra detail) that meansure what is the importants taks (on top priority)
+
 - What edge cases would you test next if you had more time?
+Edge case in the time in the task
 
 ---
 
@@ -98,16 +105,18 @@ I qualify 85 of 100 because it's problme the structure idea but it's lose the co
 **a. What went well**
 
 - What part of this project are you most satisfied with?
-
+The logic behind (prioritize) the taks which works
 
 **b. What you would improve**
 
 - If you had another iteration, what would you improve or redesign?
-
+Adding graph or a table that display the schedule (complex)
 
 **c. Key takeaway**
 
 - What is one important thing you learned about designing systems or working with AI on this project?
+Content communication, like temawork (people or AI)
+
 
 System Design:
 In the png and txt file named UML.
