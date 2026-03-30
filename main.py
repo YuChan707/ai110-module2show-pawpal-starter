@@ -56,17 +56,27 @@ for t in sorted_by_time:
     print(f"  {t.start_time}  {t.name:<20} [{t.priority}]")
 print("=" * 40)
 
-# ── 8. Mark some tasks complete then filter ───────────────────────────────────
-dog.tasks[0].mark_complete()   # Grooming → done
-cat.tasks[2].mark_complete()   # Litter box → done
+# ── 8. Complete tasks — auto-reschedule recurring ones ───────────────────────
+grooming   = dog.tasks[0]   # Grooming  (daily)
+litter_box = cat.tasks[2]   # Litter box (twice daily)
+
+dog.complete_task(grooming)
+cat.complete_task(litter_box)
+
+print("\nAuto-Reschedule Results")
+print("=" * 40)
+for t in owner.get_all_tasks():
+    status = "DONE" if t.completed else "next"
+    print(f"  [{status}] {t.name:<20} due: {t.due_date}  freq: {t.frequency}")
+print("=" * 40)
 
 print("\nPending tasks (all pets):")
 for t in owner.filter_tasks(completed=False):
-    print(f"  - {t.name} [{t.priority}]")
+    print(f"  - {t.name:<20} due: {t.due_date}")
 
 print("\nCompleted tasks (all pets):")
 for t in owner.filter_tasks(completed=True):
-    print(f"  - {t.name} [{t.priority}]")
+    print(f"  - {t.name:<20} due: {t.due_date}")
 
 print("\nMochi's tasks only:")
 for t in owner.filter_tasks(pet_name="Mochi"):
