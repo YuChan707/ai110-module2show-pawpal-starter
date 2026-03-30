@@ -22,6 +22,18 @@ Your final app should:
 - Display the plan clearly (and ideally explain the reasoning)
 - Include tests for the most important scheduling behaviors
 
+## Smarter Scheduling
+
+The scheduler has been extended beyond basic priority + time filtering with four new features:
+
+**Preference-aware filtering** — `Owner.preferences` (e.g. `"no late feeding"`, `"morning walks"`) are now mapped to real filter rules in `PREFERENCE_RULES`. Tasks that violate a preference are removed from the pool before time-budgeting runs.
+
+**Time-based sorting** — `Planner.sort_by_time()` orders any task list by `start_time` in `"HH:MM"` format using a lambda key on Python's `sorted()`. Because `"HH:MM"` strings sort correctly as plain strings, no date parsing is needed.
+
+**Auto-rescheduling** — `Task.mark_complete()` now returns a new `Task` instance due on the next occurrence (`today + timedelta(days=1)` for daily, `+7` for weekly). `Pet.complete_task()` calls this and automatically appends the new task, so recurring care never falls off the list.
+
+**Conflict detection** — `Planner.detect_conflicts()` checks every pair of tasks for overlapping time windows using the interval formula `a_start < b_end and b_start < a_end`. It returns a list of human-readable warning strings rather than raising an exception, so the app stays running and the owner is informed.
+
 ## Getting started
 
 ### Setup
