@@ -13,9 +13,9 @@ class Task:
 
 
 class Pet:
-    def __init__(self, name: str, type: str, age: int):
+    def __init__(self, name: str, pet_type: str, age: int):
         self.name = name
-        self.type = type                # "dog", "cat", etc.
+        self.pet_type = pet_type        # "dog", "cat", etc.
         self.age = age
         self.tasks: List[Task] = []
 
@@ -24,10 +24,10 @@ class Pet:
 
 
 class Owner:
-    def __init__(self, name: str, available_time: int, preferences: str):
+    def __init__(self, name: str, available_time: int, preferences: List[str] = None):
         self.name = name
         self.available_time = available_time    # in minutes
-        self.preferences = preferences
+        self.preferences = preferences or []
         self.pets: List[Pet] = []
 
     def add_pet(self, pet: Pet) -> None:
@@ -35,9 +35,9 @@ class Owner:
 
 
 class Schedule:
-    def __init__(self, tasks: List[Task], total_time: int):
+    def __init__(self, tasks: List[Task]):
         self.tasks = tasks
-        self.total_time = total_time
+        self.total_time = sum(t.duration for t in tasks)  # computed, never out of sync
 
     def display_plan(self) -> None:
         raise NotImplementedError
@@ -50,7 +50,8 @@ class Planner:
     def __init__(self, constraints: Optional[dict] = None):
         self.constraints = constraints or {}
 
-    def generate_schedule(self, tasks: List[Task], available_time: int) -> Schedule:
+    def generate_schedule(self, owner: "Owner") -> Schedule:
+        # Collects all tasks from all of the owner's pets, then filters and sorts them
         raise NotImplementedError
 
     def sort_tasks(self, tasks: List[Task]) -> List[Task]:
