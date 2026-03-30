@@ -6,11 +6,18 @@
 
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
++ The Owner class represents the user and stores their available time and preferences.
+The Pet class represents the pet and is linked to the owner. It keeps basic information like name and type.
++ The Task class represents pet care activities such as walking or feeding, including duration and priority.
++ The Planner class is the main logic component. It organizes tasks, applies constraints, and generates a daily schedule based on priority and available time.
++ The Schedule class represents the final plan, storing the selected tasks and total time, and can display or explain the plan.
+
 
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+Yes, in the task, I decide to associate a assigment with the owner name because as each pet are different (and usually match with the owner personality). They could be associate with their special task.
 
 ---
 
