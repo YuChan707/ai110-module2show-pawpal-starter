@@ -65,13 +65,18 @@ The class order in the file (Task → Pet → Owner → Schedule → Planner) is
 **a. How you used AI**
 
 - How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
+Mentoring, understand the logic behind and brainstorms the idea (polish/plain languege)
+
 - What kinds of prompts or questions were most helpful?
+using W question, why/when/how and giving definition behind
 
 **b. Judgment and verification**
 
 - Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
+when describe me the conflict schedule. Giving all possible cases, I added more on my own.
 
+- How did you evaluate or verify what the AI suggested?
+I qualify 85 of 100 because it's problme the structure idea but it's lose the context behind.
 ---
 
 ## 4. Testing and Verification
