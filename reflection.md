@@ -48,10 +48,15 @@ The class order in the file (Task → Pet → Owner → Schedule → Planner) is
 - What constraints does your scheduler consider (for example: time, priority, preferences)?
 - How did you decide which constraints mattered most?
 
++ The planner employs an approach that selects tasks in order of priority and stops once the allotted time runs out. This means it might skip a brief, low-priority task simply because a longer, high-priority task consumed the remaining minutes first.
+
 **b. Tradeoffs**
 
 - Describe one tradeoff your scheduler makes.
++ As the pet care application, as failing to complete a high-priority task (such as feeding) is always worse than skipping a low-priority one (such as environmental enrichment).
+
 - Why is that tradeoff reasonable for this scenario?
++ A pet owner would prefer to correctly complete the most important tasks rather than attempting to squeeze everything in and running the risk of running out of time halfway through a walk.
 
 ---
 
