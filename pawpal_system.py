@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import date, timedelta
 
 PRIORITY_ORDER = {"high": 0, "medium": 1, "low": 2}
 
@@ -18,6 +19,7 @@ class Task:
         category: str,
         frequency: str = "daily",
         start_time: str = "08:00",
+        due_date: date = None,
     ):
         """Initialize a Task with its name, description, duration, priority, category, frequency, and start time."""
         self.name = name
@@ -27,6 +29,7 @@ class Task:
         self.category = category        # "feeding", "grooming", "walking", etc.
         self.frequency = frequency      # "daily", "twice daily", "weekly", etc.
         self.start_time = start_time    # "HH:MM" format
+        self.due_date = due_date or date.today()
         self.completed = False
 
     def update_priority(self, new_priority: str) -> None:
@@ -35,9 +38,25 @@ class Task:
             raise ValueError(f"priority must be one of {list(PRIORITY_ORDER)}")
         self.priority = new_priority
 
-    def mark_complete(self) -> None:
-        """Mark the task as completed."""
+    RECURRENCE_DAYS = {"daily": 1, "twice daily": 1, "weekly": 7}
+
+    def mark_complete(self) -> Optional["Task"]:
+        """Mark this task complete and return a new Task for the next occurrence, or None if not recurring."""
         self.completed = True
+        days = self.RECURRENCE_DAYS.get(self.frequency)
+        if days is None:
+            return None
+        next_due = self.due_date + timedelta(days=days)
+        return Task(
+            name=self.name,
+            description=self.description,
+            duration=self.duration,
+            priority=self.priority,
+            category=self.category,
+            frequency=self.frequency,
+            start_time=self.start_time,
+            due_date=next_due,
+        )
 
     def __repr__(self) -> str:
         status = "done" if self.completed else "pending"
@@ -55,6 +74,12 @@ class Pet:
     def add_task(self, task: Task) -> None:
         """Append a task to this pet's task list."""
         self.tasks.append(task)
+
+    def complete_task(self, task: Task) -> None:
+        """Mark a task complete and automatically add the next occurrence if it recurs."""
+        next_task = task.mark_complete()
+        if next_task:
+            self.tasks.append(next_task)
 
     def __repr__(self) -> str:
         return f"Pet({self.name!r}, {self.pet_type}, {len(self.tasks)} tasks)"
